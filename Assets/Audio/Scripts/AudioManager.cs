@@ -14,6 +14,7 @@ public enum SoundType
     JUMP,
     LANDING,
     COLLECT,
+    DEATH,
     LEVELCHANGE
 }
 
