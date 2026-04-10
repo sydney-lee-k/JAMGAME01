@@ -30,7 +30,6 @@ public class MovementController : MonoBehaviour
     [SerializeField] private float dashTime = 0.25f;
     [SerializeField] private int dashCount = 1;
     [SerializeField] private float dashChargeTime = 0.25f;
-    [SerializeField] private float dashVisualTime = 0.25f;
     
     //Hidden, dash related things.
     private float remainingDashTime;
@@ -47,7 +46,6 @@ public class MovementController : MonoBehaviour
     private bool crouchConsumedByJump;
 
     [Header("Sliding")]
-    [SerializeField] private float slideSpeed = 1f;
     [SerializeField] private float slideDrag = 1f;
     [SerializeField] private float slideHeight = 1f;
     [SerializeField] private float slideCamHeightOffset = -1f;
