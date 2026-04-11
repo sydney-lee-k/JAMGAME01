@@ -11,23 +11,39 @@ public class FollowPath : MonoBehaviour
 
     [Space(10)]
     [SerializeField] private float delayBeforeStart;
+    private float remainingStartDelay;
     [SerializeField][Range(0,1f)] private float progress;
 
     [NonSerialized] public bool endReached = false;
     private Vector3 currentPos;
 
+    private float startProgress;
+    private Vector3 startAngle;
+
     private void Start()
     {
         currentPos = path.GetPoint(progress);
         transform.position = currentPos;
+        startProgress = progress;
+        startAngle = transform.eulerAngles;
+        remainingStartDelay = delayBeforeStart;
+    }
+
+    public void Reset()
+    {
+        progress = startProgress;
+        currentPos = path.GetPoint(progress);
+        transform.position = currentPos;
+        transform.eulerAngles = startAngle;
+        remainingStartDelay = delayBeforeStart;
     }
 
     private void Update()
     {
         //Start Delay
-        if (delayBeforeStart > 0)
+        if (remainingStartDelay > 0)
         {
-            delayBeforeStart -= Time.deltaTime;
+            remainingStartDelay -= Time.deltaTime;
             return;
         }
         
