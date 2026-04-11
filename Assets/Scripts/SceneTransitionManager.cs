@@ -115,7 +115,7 @@ public class SceneTransitionManager : MonoBehaviour
         FifthStage,
         FinalStage,
         PersistentObjectsScene,
-        SampleScene
+        LevelBlockouts
     }
 
     public enum TransitionStyle
