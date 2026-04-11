@@ -17,6 +17,9 @@ public class MovementController : MonoBehaviour
     [SerializeField] private float mouseSensitivity = 2.5f;
     [SerializeField] private float clampAngle = 80.0f;
     
+    [Header("Extra Gravity")]
+    [SerializeField] private float aerialGravity = 20f;
+    
     [Header("Walking")]
     [SerializeField] private float walkSpeed = 15;
     [SerializeField] private float airSpeed = 10;
@@ -25,6 +28,12 @@ public class MovementController : MonoBehaviour
     [SerializeField] private float stoppingDrag = 5;
     [SerializeField] private float airDrag = 2;
     [SerializeField] private float maxSlopeGroundAngle = 50;
+    
+    [Header("wallrunning")]
+    [SerializeField] private float wallrunUpSpeed = 9.81f;
+    [SerializeField] private float wallrunDownSpeed  = -9.81f;
+    [SerializeField] private float wallrunSlowDownSpeed = -2;
+    [SerializeField] private float wallrunMinimumHorizontalSpeed = 2f;
     
     [Header("Dash")]
     [SerializeField] private float dashSpeed = 50;
@@ -66,7 +75,6 @@ public class MovementController : MonoBehaviour
     [SerializeField] private Vector3 groundCheckSize;
     [SerializeField] private float wallrunOffset;
     [SerializeField] private float wallrunCheckHeight, wallrunCheckThickness;
-    
 
     //This should have been a state machine. However fuck you.
     [Header("States")]
@@ -412,6 +420,12 @@ public class MovementController : MonoBehaviour
                 newVelocity.y = rb.linearVelocity.y;
                 rb.linearVelocity = newVelocity;
             }
+    
+            //Extra gravity when in the air but not slamming etc
+            if (!grounded && !slamming && !dashing)
+            {
+                rb.AddForce(Vector3.down * aerialGravity, ForceMode.Acceleration);
+            }
 
             //Manual drag since we want to alter it based on your current mode of movement. Could be set to the rigid body but this felt better at the time.
             if (grounded && horizontalMovement == Vector3.zero)
@@ -448,16 +462,28 @@ public class MovementController : MonoBehaviour
             float movementSpeed =  walkSpeed;
             Vector3 targetVelocity = moveDirection * movementSpeed;
             horizontalVelocity = Vector3.MoveTowards(horizontalVelocity, targetVelocity, acceleration * Time.fixedDeltaTime);
-            if (input.Player.Crouch.inProgress)
+
+            Vector2 horizontalSpeed = new Vector2(rb.linearVelocity.x, rb.linearVelocity.z);
+            if (moveInput.y <= 0.25)
             {
-                rb.linearVelocity = new Vector3(horizontalVelocity.x, rb.linearVelocity.y, horizontalVelocity.z);
-                rb.linearVelocity = new Vector3(horizontalVelocity.x, Mathf.Clamp(rb.linearVelocity.y, rb.linearVelocity.y, -9.81f), horizontalVelocity.z);
+                //Slide down as if falling if you dont press forward
+                rb.linearVelocity = new Vector3(horizontalVelocity.x, Mathf.Clamp(rb.linearVelocity.y, rb.linearVelocity.y, wallrunDownSpeed), horizontalVelocity.z);
+            } else if (input.Player.Crouch.inProgress)
+            {
+                //Going down
+                rb.linearVelocity = new Vector3(horizontalVelocity.x,  wallrunDownSpeed, horizontalVelocity.z);
             } else if (input.Player.Jump.inProgress)
             {
-                rb.linearVelocity = new Vector3(horizontalVelocity.x, Mathf.Clamp(rb.linearVelocity.y, 9.81f, rb.linearVelocity.y), horizontalVelocity.z);
+                //Going up
+                rb.linearVelocity = new Vector3(horizontalVelocity.x, Mathf.Clamp(rb.linearVelocity.y, wallrunUpSpeed, rb.linearVelocity.y), horizontalVelocity.z);
+            } else if (horizontalSpeed.magnitude < wallrunMinimumHorizontalSpeed)
+            {
+                //Slide down if too slow, and not intentionally going up or dowwn
+                rb.linearVelocity = new Vector3(horizontalVelocity.x, wallrunSlowDownSpeed, horizontalVelocity.z);
             }
             else
             {
+                //Retain vertical position
                 rb.linearVelocity = new Vector3(horizontalVelocity.x, Mathf.Clamp(rb.linearVelocity.y, 0, rb.linearVelocity.y), horizontalVelocity.z);
             }
         }
