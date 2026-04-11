@@ -7,13 +7,14 @@ using UnityEngine.InputSystem;
 public class MovementController : MonoBehaviour
 {
     public static MovementController Instance;
-    [Header("Components")]
+    [Header("Restraints")]
     public bool moveLocked;
     public bool lookLocked;
     
     [Header("Components")]
-    [SerializeField] private GameObject cam;
+    private GameObject cam;
     [SerializeField] private CapsuleCollider hitbox;
+    [SerializeField] private Vector3 cameraOffset;
     [SerializeField] private float mouseSensitivity = 2.5f;
     [SerializeField] private float clampAngle = 80.0f;
     
@@ -92,7 +93,6 @@ public class MovementController : MonoBehaviour
     //Mouse rotations
     private float rotY;
     private float rotX;
-    private Vector3 cameraOffset;
     
     //Storing inputs
     private Vector2 moveInput;
@@ -121,7 +121,7 @@ public class MovementController : MonoBehaviour
         rotX = rot.x;
 
         //Apply camera offset but unparent for easier management of other player components (Mostly the sliding scale etc being instant)
-        cameraOffset = cam.transform.localPosition;
+        cam = Camera.main.gameObject;
         cam.transform.SetParent(null, true);
 
         //Lock Cursor at the start.
@@ -272,6 +272,7 @@ public class MovementController : MonoBehaviour
     //Checks if you are next to a wall you can run up. Could be changed to only allow if the wall is to the sides, but this felt better to me
     private bool WallRunCheck()
     {
+        if (moveInput.y <= 0.25 && !wallrunning) return false;
         Vector3 center = transform.position;
         Collider[] hits = Physics.OverlapCapsule(center + transform.up * wallrunCheckHeight/2, center + -transform.up * wallrunCheckHeight/2, wallrunCheckThickness);
             
