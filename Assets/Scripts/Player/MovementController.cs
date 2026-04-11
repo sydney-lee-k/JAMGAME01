@@ -202,11 +202,6 @@ public class MovementController : MonoBehaviour
             {
                 sliding = false;
             }
-
-            if (!grounded)
-            {
-                sliding = false;
-            }
             
             //Activate slam if youre in the air and try to slide
             if(!slamming && !grounded && !wallrunning && input.Player.Crouch.triggered && !crouchConsumedByJump && !Physics.Raycast(transform.position, -transform.up, minFloorDistance, groundLayer))
@@ -314,7 +309,7 @@ public class MovementController : MonoBehaviour
                     float angle = Vector3.Angle(rayHit.normal, Vector3.up);
                     if (angle > maxSlopeGroundAngle)
                     {
-                        continue;
+                        return false;
                     }
                 }
                 grounded = true;
@@ -328,6 +323,7 @@ public class MovementController : MonoBehaviour
                     Vector3 projected = Vector3.ProjectOnPlane(rb.linearVelocity, rayHit.normal);
                     rb.linearVelocity = new Vector3(projected.x, rb.linearVelocity.y, projected.z);
                 }
+                if (!hasGroundNormal) return false;
                 return true;
             }
         }
@@ -378,7 +374,7 @@ public class MovementController : MonoBehaviour
         if ((!wallrunning || grounded) && !sliding)
         {
             //Normal movement
-            if (horizontalMovement.magnitude > 0.1f && grounded)
+            if (horizontalMovement.magnitude > 0.1f && grounded && !dashing)
             {
                 //Get normal and project movement along it.
                 Vector3 groundNormal = Vector3.up;
@@ -386,23 +382,26 @@ public class MovementController : MonoBehaviour
                 {
                     groundNormal = hit.normal;
                 }
+                float slopeAngle = Vector3.Angle(groundNormal, Vector3.up);
                 Vector3 desiredDir = Vector3.ProjectOnPlane(moveDirection.normalized, groundNormal).normalized;
                 
                 //Project eeeeverything along the shit, so that you properly stay stuck to it
                 Vector3 currentVelocity = rb.linearVelocity;
-                Vector3 velocityOnPlane = Vector3.ProjectOnPlane(currentVelocity, groundNormal);
                 Vector3 velocityIntoGround = Vector3.Project(currentVelocity, groundNormal);
-                float currentSpeed = velocityOnPlane.magnitude;
-                float targetSpeed = Mathf.Max(currentSpeed, walkSpeed);
+       
+                Vector3 newVelocity = desiredDir * walkSpeed;
                 
-                Vector3 targetVelocityOnPlane = desiredDir * targetSpeed;
-                Vector3 newVelocity = Vector3.MoveTowards(
-                    velocityOnPlane,
-                    targetVelocityOnPlane,
-                    acceleration * Time.fixedDeltaTime
+                rb.linearVelocity = new Vector3(
+                    newVelocity.x,
+                    rb.linearVelocity.y,
+                    newVelocity.z
                 );
                 
                 Vector3 slopedGravity = Vector3.ProjectOnPlane(Physics.gravity, groundNormal) * Time.fixedDeltaTime;
+                if (slopeAngle > 5f)
+                {
+                    slopedGravity *= 0.25f;
+                }
                 rb.linearVelocity = newVelocity + velocityIntoGround + slopedGravity;
                 
             } // Air movement (could maybe be combined but if it aint broken dont fix it. at least during a game jam)
@@ -446,8 +445,11 @@ public class MovementController : MonoBehaviour
                 Vector3 groundNormal = hit.normal;
                 
                 Vector3 slopeVelocity = Vector3.ProjectOnPlane(rb.linearVelocity, groundNormal);
-                rb.linearVelocity = slopeVelocity;
-                
+                // only flatten if moving INTO the ground, not away from it
+                if (Vector3.Dot(rb.linearVelocity, groundNormal) < 0f)
+                {
+                    rb.linearVelocity = slopeVelocity;
+                }
                 Vector3 slopeDir = Vector3.ProjectOnPlane(Vector3.down, groundNormal).normalized;
                 
                 //Apply boost only when going down
