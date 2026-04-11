@@ -128,6 +128,7 @@ public class MovementController : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         UpdateCameraPosition();
+        if(PlayerPrefs.HasKey("MouseSensitivity")) mouseSensitivity = PlayerPrefs.GetFloat("MouseSensitivity");
     }
     
     private void UpdateCameraPosition()
