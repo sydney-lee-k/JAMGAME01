@@ -10063,7 +10063,7 @@ GameObject:
   - component: {fileID: 1495942800}
   - component: {fileID: 1495942799}
   - component: {fileID: 1495942798}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Stairs
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10089,7 +10089,7 @@ MeshCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 565935164}
 --- !u!33 &1495942799
@@ -13694,7 +13694,7 @@ GameObject:
   - component: {fileID: 1885238061}
   - component: {fileID: 1885238060}
   - component: {fileID: 1885238059}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Stairs (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13720,7 +13720,7 @@ MeshCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 1357002719}
 --- !u!33 &1885238060
@@ -17198,7 +17198,7 @@ GameObject:
   - component: {fileID: 2047625916}
   - component: {fileID: 2047625915}
   - component: {fileID: 2047625914}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cube (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -17224,7 +17224,7 @@ MeshCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 1004793617}
 --- !u!33 &2047625915
