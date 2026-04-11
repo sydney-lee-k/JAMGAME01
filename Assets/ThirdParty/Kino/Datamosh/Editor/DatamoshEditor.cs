@@ -30,6 +30,8 @@ namespace Kino
     [CustomEditor(typeof(Datamosh))]
     public class DatamoshEditor : Editor
     {
+        SerializedProperty _preMoshTexture;
+        SerializedProperty _moshedTexture;
         SerializedProperty _blockSize;
         SerializedProperty _entropy;
         SerializedProperty _noiseContrast;
@@ -38,6 +40,8 @@ namespace Kino
 
         void OnEnable()
         {
+            _preMoshTexture = serializedObject.FindProperty("preMoshTexture");
+            _moshedTexture = serializedObject.FindProperty("moshedTexture");
             _blockSize = serializedObject.FindProperty("_blockSize");
             _entropy = serializedObject.FindProperty("_entropy");
             _noiseContrast = serializedObject.FindProperty("_noiseContrast");
@@ -49,6 +53,8 @@ namespace Kino
         {
             serializedObject.Update();
 
+            EditorGUILayout.PropertyField(_preMoshTexture);
+            EditorGUILayout.PropertyField(_moshedTexture);
             EditorGUILayout.PropertyField(_blockSize);
             EditorGUILayout.PropertyField(_entropy);
             EditorGUILayout.PropertyField(_noiseContrast);

@@ -29,6 +29,8 @@ namespace Kino
     public class Datamosh : MonoBehaviour
     {
         #region Public properties and methods
+        [SerializeField] private RenderTexture preMoshTexture;
+        [SerializeField] private RenderTexture moshedTexture;
 
         /// Size of compression macroblock.
         public int blockSize {
@@ -155,7 +157,7 @@ namespace Kino
             _material = null;
         }
 
-        void OnRenderImage(RenderTexture source, RenderTexture destination)
+        void LateUpdate()
         {
             _material.SetFloat("_BlockSize", _blockSize);
             _material.SetFloat("_Quality", 1 - _entropy);
@@ -169,11 +171,11 @@ namespace Kino
 
                 // Update the working buffer with the current frame.
                 ReleaseBuffer(_workBuffer);
-                _workBuffer = NewWorkBuffer(source);
-                Graphics.Blit(source, _workBuffer);
+                _workBuffer = NewWorkBuffer(preMoshTexture);
+                Graphics.Blit(preMoshTexture, _workBuffer);
 
                 // Blit without effect.
-                Graphics.Blit(source, destination);
+                Graphics.Blit(preMoshTexture, moshedTexture);
             }
             else if (_sequence == 1)
             {
@@ -181,12 +183,12 @@ namespace Kino
 
                 // Initialize the displacement buffer.
                 ReleaseBuffer(_dispBuffer);
-                _dispBuffer = NewDispBuffer(source);
+                _dispBuffer = NewDispBuffer(preMoshTexture);
                 Graphics.Blit(null, _dispBuffer, _material, 0);
 
                 // Simply blit the working buffer because motion vectors
                 // might not be ready (because of camera switching).
-                Graphics.Blit(_workBuffer, destination);
+                Graphics.Blit(_workBuffer, moshedTexture);
 
                 _sequence++;
             }
@@ -197,16 +199,16 @@ namespace Kino
                 if (Time.frameCount != _lastFrame)
                 {
                     // Update the displaceent buffer.
-                    var newDisp = NewDispBuffer(source);
+                    var newDisp = NewDispBuffer(preMoshTexture);
                     Graphics.Blit(_dispBuffer, newDisp, _material, 1);
                     ReleaseBuffer(_dispBuffer);
                     _dispBuffer = newDisp;
 
                     // Moshing!
-                    var newWork = NewWorkBuffer(source);
+                    var newWork = NewWorkBuffer(preMoshTexture);
                     _material.SetTexture("_WorkTex", _workBuffer);
                     _material.SetTexture("_DispTex", _dispBuffer);
-                    Graphics.Blit(source, newWork, _material, 2);
+                    Graphics.Blit(preMoshTexture, newWork, _material, 2);
                     ReleaseBuffer(_workBuffer);
                     _workBuffer = newWork;
 
@@ -214,10 +216,9 @@ namespace Kino
                 }
 
                 // Blit the result.
-                Graphics.Blit(_workBuffer, destination);
+                Graphics.Blit(_workBuffer, moshedTexture);
             }
         }
-
         #endregion
     }
 }
