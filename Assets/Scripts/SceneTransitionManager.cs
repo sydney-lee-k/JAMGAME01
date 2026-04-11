@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using Kino;
 using UnityEngine;
@@ -22,6 +23,9 @@ public class SceneTransitionManager : MonoBehaviour
     private const float sceneFadeOutTime = 0.32f;
     private const float sceneFadeInTime = 0.32f;
 
+    public static event Action OnSceneLoaded;
+    public static event Action OnSceneTransitionOver;
+
     private void Awake()
     {
         if (Instance != null)
@@ -45,10 +49,10 @@ public class SceneTransitionManager : MonoBehaviour
 
     private void OnDestroy()
     {
-        if (datamosh.gameObject != null) Destroy(datamosh.gameObject);
-        if (renderCamera.gameObject != null) Destroy(renderCamera.gameObject);
-        if (renderCanvas.gameObject != null) Destroy(renderCanvas.gameObject);
-        if (eventSystem.gameObject != null) Destroy(eventSystem.gameObject);
+        if (datamosh != null) Destroy(datamosh.gameObject);
+        if (renderCamera != null) Destroy(renderCamera.gameObject);
+        if (renderCanvas != null) Destroy(renderCanvas.gameObject);
+        if (eventSystem != null) Destroy(eventSystem.gameObject);
     }
 
     public void StartSceneTransition(SceneName sceneName, TransitionStyle style)
@@ -84,18 +88,24 @@ public class SceneTransitionManager : MonoBehaviour
         yield return SceneManager.LoadSceneAsync(sceneName.ToString(), LoadSceneMode.Additive);
         activeScene = sceneName;
         timeTaken = Time.unscaledTime - timeTaken;
+        OnSceneLoaded?.Invoke();
 
         switch (style)
         {
             case TransitionStyle.FadeIn:
                 LeanTween.alpha(fadeImageRect, 0f, sceneFadeInTime).setEaseOutCubic();
                 yield return new WaitForSecondsRealtime(sceneFadeOutTime);
+                OnSceneTransitionOver?.Invoke();
                 break;
             case TransitionStyle.Datamosh:
                 if (timeTaken < minimumMoshTime)
                     yield return new WaitForSecondsRealtime(minimumMoshTime - timeTaken);
                 LeanTween.value(gameObject, value => datamosh.entropy = value, moshStartEntropy, moshEndEntropy, moshEntropyFadeTime)
-                    .setOnComplete(datamosh.Reset);
+                    .setOnComplete(() =>
+                    {
+                        datamosh.Reset();
+                        OnSceneTransitionOver?.Invoke();
+                    });
                 break;
         }
 
@@ -115,7 +125,7 @@ public class SceneTransitionManager : MonoBehaviour
         FifthStage,
         FinalStage,
         PersistentObjectsScene,
-        SampleScene
+        LevelBlockouts
     }
 
     public enum TransitionStyle

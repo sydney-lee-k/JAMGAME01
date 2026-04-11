@@ -14,6 +14,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/PersistentObjectsScene.unity
     guid: 539fdb579aa9dbb42a8a010aedc7ae95
+  - enabled: 1
+    path: Assets/Scenes/LevelBlockouts.unity
+    guid: fa51566ef4683c84e9993827460c8acf
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: e6aa0ff681e025c41a1f8b207807688d, type: 3}
   m_UseUCBPForAssetBundles: 0
