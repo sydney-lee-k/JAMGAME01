@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-5851473767505823995
+--- !u!114 &-5544043264536933476
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
@@ -20,8 +20,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Shader Graphs_Horrors_3D
-  m_Shader: {fileID: -6465566751694194690, guid: 5f841fc956a1c76478b7bb8b96e1dcdf, type: 3}
+  m_Name: MissingTexturesTiling
+  m_Shader: {fileID: -6465566751694194690, guid: 94a32db44ecf08643bb88617879884ee, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -37,8 +37,12 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
-    - _SampleTexture2D_77dbda8985b247b4a2ead98993464b44_Texture_1_Texture2D:
-        m_Texture: {fileID: 2800000, guid: 871fbe9f106e47d4eaa4a29897959611, type: 3}
+    - _MainText:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_385793fd8f0144cc8794fb5e0a9328ef_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 7c70369a0219a3f4495303027ca9c4f6, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
@@ -55,12 +59,8 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _OutlineThickness: 1.1
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _fuzziness: 0.01
-    m_Colors:
-    - White: {r: 1, g: 1, b: 1, a: 1}
-    - _OutlineColor: {r: 0.735849, g: 0.735849, b: 0.735849, a: 0}
+    m_Colors: []
   m_BuildTextureStacks: []
   m_AllowLocking: 1
