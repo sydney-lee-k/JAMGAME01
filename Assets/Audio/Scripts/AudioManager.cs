@@ -32,7 +32,7 @@ public enum StageTrack
 //[RequireComponent(typeof(AudioSource))]
 public class AudioManager : MonoBehaviour
 {
-    private static AudioManager instance;
+    public static AudioManager instance;
 
     [SerializeField] private SoundList[] soundList;
     [SerializeField] private TrackList[] trackList;
@@ -62,6 +62,14 @@ public class AudioManager : MonoBehaviour
     private void Start()
     {
         //PlayPauseMusic();
+    }
+
+    public void UpdateVolume()
+    {
+        float musicMultiplier = PlayerPrefs.HasKey("MusicVolume") ? PlayerPrefs.GetFloat("MusicVolume") : 1f;
+        float masterMultiplier = PlayerPrefs.HasKey("MasterVolume") ? PlayerPrefs.GetFloat("MasterVolume") : 1f;
+        audioSourceMusic_A.volume = 1 * musicMultiplier * masterMultiplier;
+        audioSourceMusic_B.volume = 1 * musicMultiplier * masterMultiplier;
     }
 
     /*
@@ -114,10 +122,13 @@ public class AudioManager : MonoBehaviour
 
     public static void PlaySound(SoundType sound, float volume = 1)
     {
-        AudioClip[] clips = instance.soundList[(int)sound].Sounds;                                      //List of available clips in given SoundType
-        AudioClip clip = clips[Random.Range(0, clips.Length)];                                          //Randomize clip
-        instance.audioSourceSFX.pitch = Random.Range(1 - instance.soundVar, 1 + instance.soundVar);     //Randomize pitch
-        instance.audioSourceSFX.PlayOneShot(clip, volume);                                              //Play clip
+        float effectMultiplier = PlayerPrefs.HasKey("EffectVolume") ? PlayerPrefs.GetFloat("EffectVolume") : 1f;
+        float masterMultiplier = PlayerPrefs.HasKey("MasterVolume") ? PlayerPrefs.GetFloat("MasterVolume") : 1f;
+        
+        AudioClip[] clips = instance.soundList[(int)sound].Sounds;                                            //List of available clips in given SoundType
+        AudioClip clip = clips[Random.Range(0, clips.Length)];                                                //Randomize clip
+        instance.audioSourceSFX.pitch = Random.Range(1 - instance.soundVar, 1 + instance.soundVar);           //Randomize pitch
+        instance.audioSourceSFX.PlayOneShot(clip, volume * effectMultiplier * masterMultiplier);   //Play clip
     }
 
     public static void PlayFootSteps()
