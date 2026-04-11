@@ -17,6 +17,9 @@ public class MovementController : MonoBehaviour
     [SerializeField] private float mouseSensitivity = 2.5f;
     [SerializeField] private float clampAngle = 80.0f;
     
+    [Header("Extra Gravity")]
+    [SerializeField] private float aerialGravity = 20f;
+    
     [Header("Walking")]
     [SerializeField] private float walkSpeed = 15;
     [SerializeField] private float airSpeed = 10;
@@ -24,6 +27,13 @@ public class MovementController : MonoBehaviour
     [SerializeField] private float jumpHeight = 15;
     [SerializeField] private float stoppingDrag = 5;
     [SerializeField] private float airDrag = 2;
+    [SerializeField] private float maxSlopeGroundAngle = 50;
+    
+    [Header("wallrunning")]
+    [SerializeField] private float wallrunUpSpeed = 9.81f;
+    [SerializeField] private float wallrunDownSpeed  = -9.81f;
+    [SerializeField] private float wallrunSlowDownSpeed = -2;
+    [SerializeField] private float wallrunMinimumHorizontalSpeed = 2f;
     
     [Header("Dash")]
     [SerializeField] private float dashSpeed = 50;
@@ -65,7 +75,6 @@ public class MovementController : MonoBehaviour
     [SerializeField] private Vector3 groundCheckSize;
     [SerializeField] private float wallrunOffset;
     [SerializeField] private float wallrunCheckHeight, wallrunCheckThickness;
-    
 
     //This should have been a state machine. However fuck you.
     [Header("States")]
@@ -90,6 +99,10 @@ public class MovementController : MonoBehaviour
     private Vector3 horizontalMovement;
     private Vector2 lookInput;
 
+    //Allows slopes to send the player flying
+    private bool wasGrounded;
+    private bool justLeftGround;
+    private float lastGroundedYVelocity;
     
     void Awake()
     {
@@ -143,8 +156,17 @@ public class MovementController : MonoBehaviour
         
         if(!lookLocked) MouseLook();
         
-        //Disable gravity if grounded. Reduces jitter on slopes etc
-        if (grounded && !sliding) rb.useGravity = false; else rb.useGravity = true;
+        //stick to ground
+        if (horizontalMovement.magnitude < 0.1f && grounded && !sliding)
+        {
+            //If you arent moving just... stay where you are, plis
+            if(rb.linearVelocity.y < jumpHeight/2) rb.linearVelocity = new Vector3(0, 0, 0);
+            rb.useGravity = false;
+        }
+        else
+        {
+            rb.useGravity = true;
+        }
         
         //Activate a jump
         if (input.Player.Jump.triggered && grounded && !moveLocked)
@@ -176,13 +198,13 @@ public class MovementController : MonoBehaviour
             {
                 sliding = true;
             }
-            else if (!input.Player.Crouch.inProgress || !grounded)
+            else if (!input.Player.Crouch.inProgress)
             {
                 sliding = false;
             }
             
             //Activate slam if youre in the air and try to slide
-            if(!slamming && !grounded && !wallrunning && input.Player.Crouch.inProgress && !crouchConsumedByJump && !Physics.Raycast(transform.position, -transform.up, minFloorDistance, groundLayer))
+            if(!slamming && !grounded && !wallrunning && input.Player.Crouch.triggered && !crouchConsumedByJump && !Physics.Raycast(transform.position, -transform.up, minFloorDistance, groundLayer))
             {
                 slamming = true;
                 rb.linearVelocity = Vector3.down * slamForce;
@@ -264,7 +286,7 @@ public class MovementController : MonoBehaviour
         return false;
     }
     
-    //Esoteric ground chec using a pair of box colliders to avoid issues with the player easily falling because raycast is at the center / not thick enough.
+    //Esoteric ground check using a pair of box colliders to avoid issues with the player easily falling because raycast is at the center / not thick enough.
     private bool GroundCheck()
     {
         Vector3 center = transform.position + groundCheckOffset;
@@ -281,18 +303,27 @@ public class MovementController : MonoBehaviour
         {
             if (0 != (groundLayer & (1 << hit.gameObject.layer)))
             {
+                //If surface is too large a slope, wont count it as ground. Helps make slams into steep slopes more dynamic
+                if (hasGroundNormal)
+                {
+                    float angle = Vector3.Angle(rayHit.normal, Vector3.up);
+                    if (angle > maxSlopeGroundAngle)
+                    {
+                        return false;
+                    }
+                }
                 grounded = true;
     
-                // If you are slamming and you hit the ground, transitions velocity along with a speed boost (or penalty I suppose) toward the direction of the normals.
+                // If you are slamming and you hit the ground, transitions velocity toward the direction of the normals.
                 if (slamming && hasGroundNormal)
                 {
-                    Vector3 projected = Vector3.ProjectOnPlane(rb.linearVelocity, rayHit.normal);
-
-                    rb.linearVelocity = projected;
-
                     slamming = false;
                     sliding = true;
+                    
+                    Vector3 projected = Vector3.ProjectOnPlane(rb.linearVelocity, rayHit.normal);
+                    rb.linearVelocity = new Vector3(projected.x, rb.linearVelocity.y, projected.z);
                 }
+                if (!hasGroundNormal) return false;
                 return true;
             }
         }
@@ -343,23 +374,56 @@ public class MovementController : MonoBehaviour
         if ((!wallrunning || grounded) && !sliding)
         {
             //Normal movement
-            if (horizontalMovement != Vector3.zero && grounded)
+            if (horizontalMovement.magnitude > 0.1f && grounded && !dashing)
             {
-                Vector3 desiredDir = moveDirection.normalized;
-                float currentSpeed = horizontalVelocity.magnitude;
-                float targetSpeed = Mathf.Max(currentSpeed, walkSpeed);
-                Vector3 newVelocity = desiredDir * targetSpeed;
-                newVelocity.y = rb.linearVelocity.y;
-                rb.linearVelocity = newVelocity;
+                //Get normal and project movement along it.
+                Vector3 groundNormal = Vector3.up;
+                if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 2f, groundLayer))
+                {
+                    groundNormal = hit.normal;
+                }
+                float slopeAngle = Vector3.Angle(groundNormal, Vector3.up);
+                Vector3 desiredDir = Vector3.ProjectOnPlane(moveDirection.normalized, groundNormal).normalized;
+                
+                //Project eeeeverything along the shit, so that you properly stay stuck to it
+                Vector3 currentVelocity = rb.linearVelocity;
+                Vector3 velocityIntoGround = Vector3.Project(currentVelocity, groundNormal);
+       
+                Vector3 newVelocity = desiredDir * walkSpeed;
+                
+                rb.linearVelocity = new Vector3(
+                    newVelocity.x,
+                    rb.linearVelocity.y,
+                    newVelocity.z
+                );
+                
+                Vector3 slopedGravity = Vector3.ProjectOnPlane(Physics.gravity, groundNormal) * Time.fixedDeltaTime;
+                if (slopeAngle > 5f)
+                {
+                    slopedGravity *= 0.25f;
+                }
+                rb.linearVelocity = newVelocity + velocityIntoGround + slopedGravity;
+                
             } // Air movement (could maybe be combined but if it aint broken dont fix it. at least during a game jam)
             else if (horizontalMovement != Vector3.zero)
             {
                 Vector3 desiredDir = moveDirection.normalized;
+
+                if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 2f, groundLayer))
+                {
+                    desiredDir = Vector3.ProjectOnPlane(desiredDir, hit.normal).normalized;
+                }
                 float currentSpeed = horizontalVelocity.magnitude;
                 float targetSpeed = currentSpeed > airSpeed ? currentSpeed : airSpeed;
                 Vector3 newVelocity = desiredDir * targetSpeed;
                 newVelocity.y = rb.linearVelocity.y;
                 rb.linearVelocity = newVelocity;
+            }
+    
+            //Extra gravity when in the air but not slamming etc
+            if (!grounded && !slamming && !dashing)
+            {
+                rb.AddForce(Vector3.down * aerialGravity, ForceMode.Acceleration);
             }
 
             //Manual drag since we want to alter it based on your current mode of movement. Could be set to the rigid body but this felt better at the time.
@@ -381,10 +445,17 @@ public class MovementController : MonoBehaviour
                 Vector3 groundNormal = hit.normal;
                 
                 Vector3 slopeVelocity = Vector3.ProjectOnPlane(rb.linearVelocity, groundNormal);
-                rb.linearVelocity = slopeVelocity;
-                
+                // only flatten if moving INTO the ground, not away from it
+                if (Vector3.Dot(rb.linearVelocity, groundNormal) < 0f)
+                {
+                    rb.linearVelocity = slopeVelocity;
+                }
                 Vector3 slopeDir = Vector3.ProjectOnPlane(Vector3.down, groundNormal).normalized;
-                rb.AddForce(slopeDir * slopeMultiplier, ForceMode.Acceleration);
+                
+                //Apply boost only when going down
+                if (rb.linearVelocity.y <= 0)
+                    rb.AddForce(slopeDir * slopeMultiplier, ForceMode.Acceleration);
+              
                 rb.AddForce(-slopeVelocity * slideDrag, ForceMode.Acceleration);
             }
         }//Wallrunning
@@ -393,16 +464,28 @@ public class MovementController : MonoBehaviour
             float movementSpeed =  walkSpeed;
             Vector3 targetVelocity = moveDirection * movementSpeed;
             horizontalVelocity = Vector3.MoveTowards(horizontalVelocity, targetVelocity, acceleration * Time.fixedDeltaTime);
-            if (input.Player.Crouch.inProgress)
+
+            Vector2 horizontalSpeed = new Vector2(rb.linearVelocity.x, rb.linearVelocity.z);
+            if (moveInput.y <= 0.25)
             {
-                rb.linearVelocity = new Vector3(horizontalVelocity.x, rb.linearVelocity.y, horizontalVelocity.z);
-                rb.linearVelocity = new Vector3(horizontalVelocity.x, Mathf.Clamp(rb.linearVelocity.y, rb.linearVelocity.y, -9.81f), horizontalVelocity.z);
+                //Slide down as if falling if you dont press forward
+                rb.linearVelocity = new Vector3(horizontalVelocity.x, Mathf.Clamp(rb.linearVelocity.y, rb.linearVelocity.y, wallrunDownSpeed), horizontalVelocity.z);
+            } else if (input.Player.Crouch.inProgress)
+            {
+                //Going down
+                rb.linearVelocity = new Vector3(horizontalVelocity.x,  wallrunDownSpeed, horizontalVelocity.z);
             } else if (input.Player.Jump.inProgress)
             {
-                rb.linearVelocity = new Vector3(horizontalVelocity.x, Mathf.Clamp(rb.linearVelocity.y, 9.81f, rb.linearVelocity.y), horizontalVelocity.z);
+                //Going up
+                rb.linearVelocity = new Vector3(horizontalVelocity.x, Mathf.Clamp(rb.linearVelocity.y, wallrunUpSpeed, rb.linearVelocity.y), horizontalVelocity.z);
+            } else if (horizontalSpeed.magnitude < wallrunMinimumHorizontalSpeed)
+            {
+                //Slide down if too slow, and not intentionally going up or dowwn
+                rb.linearVelocity = new Vector3(horizontalVelocity.x, wallrunSlowDownSpeed, horizontalVelocity.z);
             }
             else
             {
+                //Retain vertical position
                 rb.linearVelocity = new Vector3(horizontalVelocity.x, Mathf.Clamp(rb.linearVelocity.y, 0, rb.linearVelocity.y), horizontalVelocity.z);
             }
         }
