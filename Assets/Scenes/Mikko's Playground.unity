@@ -301,7 +301,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 406535472}
-  - component: {fileID: 406535471}
+  - component: {fileID: 406535473}
   - component: {fileID: 406535470}
   m_Layer: 0
   m_Name: ConstitutingCube
@@ -323,40 +323,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   destructiblePrefab: {fileID: 1642573648}
-  lifetime: 1
-  easingDuration: 1
-  easingFunction: 0
-  startScaleAtZero: 1
+  startConstructed: 0
+  easingDuration: 2
+  easingFunction: 28
   startKinematic: 1
   globalOffset: {x: 0, y: 0, z: 0}
   randomOffsetMin: {x: 10, y: 10, z: 10}
   randomOffsetMax: {x: -10, y: -10, z: -10}
-  transformAndFinaleSpot: {fileID: 0}
-  transformParticle: {fileID: 0}
-  parentFragmentParticle: 0
-  fragmentParticle: {fileID: 0}
-  finaleParticle: {fileID: 0}
---- !u!114 &406535471
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 406535469}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 88a88f02c73fccf4797b08161007247d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ReconstitutingDestructible
-  destructiblePrefab: {fileID: 1642573648}
-  lifetime: 5
-  easingDuration: 1
-  easingFunction: 0
-  transformAndFinaleSpot: {fileID: 0}
-  transformParticle: {fileID: 0}
-  parentFragmentParticle: 0
-  fragmentParticle: {fileID: 0}
-  finaleParticle: {fileID: 0}
+  disableColliderWhenShattered: 1
+  destroyedFragmentScale: 0.5
+  triggerReconstitute: 0
+  triggerFracture: 0
+  triggerResetToAssembled: 0
+  triggerResetToDestroyed: 0
 --- !u!4 &406535472
 Transform:
   m_ObjectHideFlags: 0
@@ -373,6 +352,23 @@ Transform:
   - {fileID: 1642573654}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &406535473
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 406535469}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de2dca5ca81464b48919ee001a230531, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  target: {fileID: 406535470}
+  active: 1
+  aliveTime: 3
+  deadTime: 2
+  remainingSwapTime: 0
 --- !u!1 &410146838
 GameObject:
   m_ObjectHideFlags: 0
@@ -1260,7 +1256,7 @@ MonoBehaviour:
     enableRefracturing: 0
     maxRefractureCount: 1
     invokeCallbacks: 0
-  inheritLayer: 0
+  inheritLayer: 1
   addSlowDestroy: 0
   destroyTime: 0
   callbackOptions:
