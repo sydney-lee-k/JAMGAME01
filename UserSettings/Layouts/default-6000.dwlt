@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_PixelRect:
     serializedVersion: 2
-    x: 1
-    y: 51
+    x: 35
+    y: 1
     width: 1704
     height: 1340
   m_ShowMode: 4
@@ -2281,7 +2281,7 @@ MonoBehaviour:
   m_AudioPlay: 0
   m_DebugDrawModesUseInteractiveLightBakingData: 0
   m_Position:
-    m_Target: {x: -5.284871, y: -2.437909, z: 23.264788}
+    m_Target: {x: 5.323376, y: -2.3454404, z: 14.26065}
     speed: 2
     m_Value: {x: -5.284871, y: -2.437909, z: 23.264788}
   m_RenderMode: 0
@@ -2329,7 +2329,7 @@ MonoBehaviour:
     m_GridAxis: 1
     m_gridOpacity: 0.5
   m_Rotation:
-    m_Target: {x: 0.10592756, y: -0.19817904, z: 0.021559963, w: 0.97420514}
+    m_Target: {x: 0.120020166, y: 0.0047778212, z: -0.00056541833, w: 0.99277896}
     speed: 2
     m_Value: {x: -0.10592756, y: 0.19817902, z: -0.021559963, w: -0.9742051}
   m_Size:
@@ -2442,7 +2442,8 @@ MonoBehaviour:
       m_Data: 65616
     m_ExpandedIDs:
     - m_Data: 0
-    - m_Data: 48996
+    - m_Data: 49586
+    - m_Data: 49588
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -2475,7 +2476,8 @@ MonoBehaviour:
       m_Data: 0
     m_ExpandedIDs:
     - m_Data: 0
-    - m_Data: 48996
+    - m_Data: 49586
+    - m_Data: 49588
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
