@@ -700,10 +700,11 @@ MonoBehaviour:
   fovSlider: {fileID: 95213287}
   fovNumber: {fileID: 1629889948}
   mouseSensitivitySlider: {fileID: 273440203}
-  resetButton: {fileID: 475550093}
   masterVolumeSlider: {fileID: 232900455}
   musicVolumeSlider: {fileID: 2063043473}
-  effectVolumeSlider: {fileID: 232900455}
+  soundVolumeSlider: {fileID: 232900455}
+  audioMixer: {fileID: 24100000, guid: ee7c65b71c0c1204d97ad27a36d21689, type: 2}
+  resetButton: {fileID: 475550093}
 --- !u!1 &170911406
 GameObject:
   m_ObjectHideFlags: 0
@@ -1016,13 +1017,25 @@ MonoBehaviour:
   m_FillRect: {fileID: 471270286}
   m_HandleRect: {fileID: 501468094}
   m_Direction: 0
-  m_MinValue: 0
+  m_MinValue: 0.00001
   m_MaxValue: 1
   m_WholeNumbers: 0
   m_Value: 0.75
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 149047729}
+        m_TargetAssemblyTypeName: SettingsController, Assembly-CSharp
+        m_MethodName: SetSoundVolume
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &261294282
 GameObject:
   m_ObjectHideFlags: 0
@@ -3124,13 +3137,25 @@ MonoBehaviour:
   m_FillRect: {fileID: 1160745647}
   m_HandleRect: {fileID: 2006397186}
   m_Direction: 0
-  m_MinValue: 0
+  m_MinValue: 0.00001
   m_MaxValue: 1
   m_WholeNumbers: 0
   m_Value: 0.75
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 149047729}
+        m_TargetAssemblyTypeName: SettingsController, Assembly-CSharp
+        m_MethodName: SetMasterVolume
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &668301897
 GameObject:
   m_ObjectHideFlags: 0
@@ -3418,7 +3443,7 @@ GameObject:
   - component: {fileID: 701412930}
   - component: {fileID: 701412929}
   m_Layer: 5
-  m_Name: Effect Volume
+  m_Name: Sound Volume
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3464,7 +3489,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Effect Volume
+  m_text: Sound Volume
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 42ea0551e00b2c24d9f80727b3e4270b, type: 2}
   m_sharedMaterial: {fileID: -1635025931589751571, guid: 42ea0551e00b2c24d9f80727b3e4270b, type: 2}
@@ -8371,13 +8396,25 @@ MonoBehaviour:
   m_FillRect: {fileID: 1431921135}
   m_HandleRect: {fileID: 1086997411}
   m_Direction: 0
-  m_MinValue: 0
+  m_MinValue: 0.00001
   m_MaxValue: 1
   m_WholeNumbers: 0
   m_Value: 0.75
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 149047729}
+        m_TargetAssemblyTypeName: SettingsController, Assembly-CSharp
+        m_MethodName: SetMusicVolume
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &2092748457
 GameObject:
   m_ObjectHideFlags: 0
