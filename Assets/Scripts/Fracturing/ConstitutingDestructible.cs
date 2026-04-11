@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -46,8 +47,8 @@ public class ConstitutingDestructible : MonoBehaviour
 
     private CustomFracture fractureController;
     
-    private bool reconstituting;
-    private bool isAssembled = false;
+    [NonSerialized] public  bool reconstituting;
+    [NonSerialized] public bool isAssembled = false;
 
     private void Awake()
     {
@@ -215,6 +216,7 @@ public class ConstitutingDestructible : MonoBehaviour
         bool returnParent
     )
     {
+        reconstituting = true;
         //Startup
         if (!returnParent)
         {
@@ -227,8 +229,6 @@ public class ConstitutingDestructible : MonoBehaviour
                 fragments[i].GetComponent<Collider>().enabled = true;
             }
         }
-        
-        reconstituting = true;
 
         float elapsedTime = 0f;
         var func = EasingFunction.GetEasingFunction(easingFunction);
@@ -264,7 +264,6 @@ public class ConstitutingDestructible : MonoBehaviour
 
             yield return null;
         }
-        reconstituting = false;
         
         //Cleanup
         if (returnParent)
@@ -278,5 +277,7 @@ public class ConstitutingDestructible : MonoBehaviour
                 fragments[i].GetComponent<Collider>().enabled = false;
             }
         }
+        
+        reconstituting = false;
     }
 }
