@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 [RequireComponent(typeof(SphereCollider))]
-public class PickupItem : MonoBehaviour
+public class KeyPickup : MonoBehaviour
 {
     public static event Action OnKeyGather;
 
