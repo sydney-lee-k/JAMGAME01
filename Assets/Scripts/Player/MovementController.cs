@@ -128,7 +128,13 @@ public class MovementController : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         UpdateCameraPosition();
-        if(PlayerPrefs.HasKey("MouseSensitivity")) mouseSensitivity = PlayerPrefs.GetFloat("MouseSensitivity");
+        if (PlayerPrefs.HasKey("MouseSensitivity")) mouseSensitivity = PlayerPrefs.GetFloat("MouseSensitivity");
+
+        SceneTransitionManager.OnSceneLoaded += () =>
+        {
+            Transform spawnTransform = GameObject.FindWithTag("PlayerSpawn").transform;
+            transform.SetPositionAndRotation(spawnTransform.position, spawnTransform.rotation);
+        };
     }
     
     private void UpdateCameraPosition()
