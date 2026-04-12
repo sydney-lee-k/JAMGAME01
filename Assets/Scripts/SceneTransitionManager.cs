@@ -84,6 +84,9 @@ public class SceneTransitionManager : MonoBehaviour
         activeScene = sceneName;
         timeTaken = Time.unscaledTime - timeTaken;
         OnSceneLoaded?.Invoke();
+        MovementController movementController = FindFirstObjectByType<MovementController>();
+        Transform playerSpawn = GameObject.FindWithTag("PlayerSpawn").transform;
+        GameObject player = movementController.gameObject;
 
         switch (style)
         {
@@ -95,6 +98,10 @@ public class SceneTransitionManager : MonoBehaviour
                 if (timeTaken < minimumMoshTransitionTime)
                     yield return new WaitForSecondsRealtime(minimumMoshTransitionTime - timeTaken);
                 MoshManager.Instance.FadeOutMosh();
+                movementController.ResetVelocity();
+                player.transform.position = playerSpawn.position;
+                player.transform.eulerAngles = playerSpawn.eulerAngles;
+                movementController.KinematicOff();
                 break;
         }
         OnSceneTransitionOver?.Invoke();

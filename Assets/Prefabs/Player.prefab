@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3643007918784170666}
   - component: {fileID: 6609658489013720042}
+  - component: {fileID: 3302101126694259312}
   m_Layer: 1
   m_Name: Hitbox
   m_TagString: Player
@@ -55,6 +56,18 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &3302101126694259312
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1453476759426835175}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9fee85ec93b0334ebea57b00f7e03e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerInventory
 --- !u!1 &6805815464752633305
 GameObject:
   m_ObjectHideFlags: 0

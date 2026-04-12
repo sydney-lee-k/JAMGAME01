@@ -7,6 +7,7 @@ public class PlayerInventory : MonoBehaviour
     private void Start()
     {
         KeyPickup.OnKeyGather += AddKey;
+        KeyPickup.OnLastKeyGather += AddKey;
     }
 
     public int KeyCount => keyCount;
