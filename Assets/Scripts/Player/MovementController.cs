@@ -153,28 +153,28 @@ public class MovementController : MonoBehaviour
         cam.transform.position = transform.position + rotatedOffset;
         cam.transform.rotation = Quaternion.Euler(rotX, rotY, 0f);
     }
-    
+
     void Update()
     {
         grounded = GroundCheck();
         wallrunning = WallRunCheck();
         moveInput = input.Player.Move.ReadValue<Vector2>();
         horizontalMovement = new Vector3(moveInput.x, 0, moveInput.y).normalized;
-        
-        if(!lookLocked) MouseLook();
-        
+
+        if (!lookLocked) MouseLook();
+
         //stick to ground
         if (horizontalMovement.magnitude < 0.1f && grounded && !sliding)
         {
             //If you arent moving just... stay where you are, plis
-            if(rb.linearVelocity.y < jumpHeight/2) rb.linearVelocity = new Vector3(0, 0, 0);
+            if (rb.linearVelocity.y < jumpHeight / 2) rb.linearVelocity = new Vector3(0, 0, 0);
             rb.useGravity = false;
         }
         else
         {
             rb.useGravity = true;
         }
-        
+
         //Activate a jump
         if (input.Player.Jump.triggered && grounded && !moveLocked)
         {
@@ -193,7 +193,7 @@ public class MovementController : MonoBehaviour
                 remainingDashTime = dashTime;
                 dashDirection = transform.forward;
             }
-            
+
             //Enable slide after jump when you let go to prevent jitter
             if (!input.Player.Crouch.IsPressed())
             {
@@ -209,9 +209,9 @@ public class MovementController : MonoBehaviour
             {
                 sliding = false;
             }
-            
+
             //Activate slam if youre in the air and try to slide
-            if(!slamming && !grounded && !wallrunning && input.Player.Crouch.triggered && !crouchConsumedByJump && !Physics.Raycast(transform.position, -transform.up, minFloorDistance, groundLayer))
+            if (!slamming && !grounded && !wallrunning && input.Player.Crouch.triggered && !crouchConsumedByJump && !Physics.Raycast(transform.position, -transform.up, minFloorDistance, groundLayer))
             {
                 slamming = true;
                 rb.linearVelocity = Vector3.down * slamForce;
@@ -236,7 +236,19 @@ public class MovementController : MonoBehaviour
             targetCameraYOffset = 0f;
         }
     }
-    
+
+    public void ResetVelocity()
+    {
+        rb.linearVelocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+        rb.isKinematic = true;
+    }
+
+    public void KinematicOff()
+    {
+        rb.isKinematic = false;
+    }
+
     void FixedUpdate()
     {
         if (!moveLocked)
