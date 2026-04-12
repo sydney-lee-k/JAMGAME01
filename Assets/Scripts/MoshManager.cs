@@ -41,6 +41,14 @@ public class MoshManager : MonoBehaviour
                 renderImg.rectTransform.sizeDelta = new(Screen.height * 16f / 9f, Screen.height);
             }
         };
+            if (Screen.width / Screen.height > 16f / 9f)
+            {
+                renderImg.rectTransform.sizeDelta = new(Screen.width, Screen.width * 9f / 16f);
+            }
+            else
+            {
+                renderImg.rectTransform.sizeDelta = new(Screen.height * 16f / 9f, Screen.height);
+            }
     }
 
     private void OnDestroy()
