@@ -21,6 +21,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 //
+using System;
+using System.Collections;
 using UnityEngine;
 
 namespace Kino
@@ -94,6 +96,8 @@ namespace Kino
             _sequence = 0;
         }
 
+        public static event Action<Vector2> OnScreenResized;
+
         #endregion
 
         #region Private properties
@@ -108,6 +112,9 @@ namespace Kino
 
         int _sequence;
         int _lastFrame;
+        float lastScreenWidth;
+        float lastScreenHeight;
+        const float resizeCheckFrequency = 0.2f;
 
         RenderTexture NewWorkBuffer(RenderTexture source)
         {
@@ -144,6 +151,41 @@ namespace Kino
 
             _sequence = 0;
         }
+
+        void Start()
+        {
+            lastScreenWidth = Screen.width;
+            lastScreenHeight = Screen.height;
+            StartCoroutine(ScreenResizeChecker());
+        }
+
+        IEnumerator ScreenResizeChecker()
+        {
+            while (true)
+            {
+                if (lastScreenWidth != Screen.width || lastScreenHeight != Screen.height)
+                {
+                    // SetRenderTextureSizes();
+                    OnScreenResized?.Invoke(new(Screen.width, Screen.height));
+                }
+                lastScreenWidth = Screen.width;
+                lastScreenHeight = Screen.height;
+                yield return new WaitForSecondsRealtime(resizeCheckFrequency);
+            }
+        }
+
+        // void SetRenderTextureSizes()
+        // {
+        //     preMoshTexture.Release();
+        //     preMoshTexture.width = Screen.width;
+        //     preMoshTexture.height = Screen.height;
+        //     preMoshTexture.Create();
+        //     moshedTexture.Release();
+        //     moshedTexture.width = Screen.width;
+        //     moshedTexture.height = Screen.height;
+        //     moshedTexture.Create();
+        //     OnScreenResized?.Invoke(new(moshedTexture.width, moshedTexture.height));
+        // }
 
         void OnDisable()
         {
