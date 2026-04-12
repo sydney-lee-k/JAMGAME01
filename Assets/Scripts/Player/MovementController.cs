@@ -103,7 +103,11 @@ public class MovementController : MonoBehaviour
     private bool wasGrounded;
     private bool justLeftGround;
     private float lastGroundedYVelocity;
-    
+
+    //Footstep audio
+    private Vector3 prevPosition;
+    float minDistance = 3.2f;
+
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -135,6 +139,9 @@ public class MovementController : MonoBehaviour
             Transform spawnTransform = GameObject.FindWithTag("PlayerSpawn").transform;
             transform.SetPositionAndRotation(spawnTransform.position, spawnTransform.rotation);
         };
+
+        //This is for footstep audio
+        prevPosition = transform.position;
     }
     
     private void UpdateCameraPosition()
@@ -341,6 +348,7 @@ public class MovementController : MonoBehaviour
 
     private void Jump()
     {
+        AudioManager.PlaySound(SoundType.JUMP);
         rb.AddForce(Vector3.up * jumpHeight, ForceMode.VelocityChange);
     }
 
@@ -369,10 +377,18 @@ public class MovementController : MonoBehaviour
         Vector3 horizontalVelocity = new Vector3(velocity.x, 0, velocity.z);
 
         Vector3 moveDirection = transform.forward * horizontalMovement.z + transform.right * horizontalMovement.x;
-        
+
+        //Footstep audio triggering
+        if (Vector3.Distance(transform.position, prevPosition) > minDistance && grounded && !dashing)
+        {
+            AudioManager.PlaySound(SoundType.FOOTSTEP);
+            prevPosition = transform.position;
+        }
+
         // Dashing
         if (dashing && dashActivated)
         {
+            AudioManager.PlaySound(SoundType.DASH);
             Vector3 targetVelocity = dashDirection * dashSpeed;
             rb.linearVelocity += targetVelocity;
             dashActivated = false;

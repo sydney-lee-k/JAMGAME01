@@ -53,11 +53,11 @@ public class ResetManager : MonoBehaviour
         movementController.lookLocked = true;
         movementController.moveLocked = true;
         MoshManager.Instance.StartMosh();
+        OnPlayerResetStart?.Invoke();
         yield return null;
         yield return null;
         player.transform.position = playerStart.position;
         player.transform.eulerAngles = playerStart.eulerAngles;
-        OnPlayerResetStart?.Invoke();
 
         yield return new WaitForSecondsRealtime(resetMoshTime);
         MoshManager.Instance.FadeOutMosh();

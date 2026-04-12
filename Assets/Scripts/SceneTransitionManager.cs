@@ -19,6 +19,7 @@ public class SceneTransitionManager : MonoBehaviour
     private const float sceneFadeInTime = 0.32f;
     private const float minimumMoshTransitionTime = 1.6f;
 
+    public static event Action<SceneName> OnSceneLoadStart;
     public static event Action OnSceneLoaded;
     public static event Action OnSceneTransitionOver;
 
@@ -69,6 +70,8 @@ public class SceneTransitionManager : MonoBehaviour
                 MoshManager.Instance.StartMosh();
                 break;
         }
+
+        OnSceneLoadStart?.Invoke(sceneName);
 
         float timeTaken = Time.unscaledTime;
         if (!persistentsLoaded)

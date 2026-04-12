@@ -9,13 +9,12 @@ using Random = UnityEngine.Random;
 
 public enum SoundType
 {
-    CLICK,
     FOOTSTEP,
     JUMP,
-    LANDING,
     COLLECT,
     DEATH,
-    LEVELCHANGE
+    LEVELCHANGE,
+    DASH
 }
 
 public enum StageTrack
@@ -66,6 +65,43 @@ public class AudioManager : MonoBehaviour
     private void Start()
     {
         //PlayPauseMusic();
+        SceneTransitionManager.OnSceneLoadStart += sceneName =>
+        {
+            PlaySound(SoundType.LEVELCHANGE);
+            switch (sceneName)
+            {
+                case SceneTransitionManager.SceneName.FirstStage:
+                    StartStageMusic(StageTrack.STAGE_1);
+                    break;
+                case SceneTransitionManager.SceneName.SecondStage:
+                    StartStageMusic(StageTrack.STAGE_2);
+                    break;
+                case SceneTransitionManager.SceneName.ThirdStage:
+                    StartStageMusic(StageTrack.STAGE_3);
+                    break;
+                case SceneTransitionManager.SceneName.FourthStage:
+                    StartStageMusic(StageTrack.STAGE_4);
+                    break;
+                case SceneTransitionManager.SceneName.FifthStage:
+                    StartStageMusic(StageTrack.STAGE_5);
+                    break;
+                case SceneTransitionManager.SceneName.FinalStage:
+                    StartStageMusic(StageTrack.STAGE_6);
+                    break;
+            }
+        };
+        ResetManager.OnPlayerResetStart += () =>
+        {
+            PlaySound(SoundType.DEATH);
+        };
+        KeyPickup.OnKeyGather += () =>
+        {
+            PlaySound(SoundType.COLLECT);
+        };
+        KeyPickup.OnLastKeyGather += () =>
+        {
+            ChangeMusic();
+        };
     }
 
     /*
@@ -118,19 +154,13 @@ public class AudioManager : MonoBehaviour
 
     public static void PlaySound(SoundType sound, float volume = 1)
     {
-        float effectMultiplier = PlayerPrefs.HasKey("EffectVolume") ? PlayerPrefs.GetFloat("EffectVolume") : 1f;
-        float masterMultiplier = PlayerPrefs.HasKey("MasterVolume") ? PlayerPrefs.GetFloat("MasterVolume") : 1f;
+        //float effectMultiplier = PlayerPrefs.HasKey("EffectVolume") ? PlayerPrefs.GetFloat("EffectVolume") : 1f;
+        //float masterMultiplier = PlayerPrefs.HasKey("MasterVolume") ? PlayerPrefs.GetFloat("MasterVolume") : 1f;
         
         AudioClip[] clips = instance.soundList[(int)sound].Sounds;                                            //List of available clips in given SoundType
         AudioClip clip = clips[Random.Range(0, clips.Length)];                                                //Randomize clip
         instance.audioSourceSFX.pitch = Random.Range(1 - instance.soundVar, 1 + instance.soundVar);           //Randomize pitch
-        instance.audioSourceSFX.PlayOneShot(clip, volume * effectMultiplier * masterMultiplier);              //Play clip
-    }
-
-    public static void PlayFootSteps()
-    {
-
-        //instance.audioSourceSFX
+        instance.audioSourceSFX.PlayOneShot(clip, volume /** effectMultiplier * masterMultiplier*/);              //Play clip
     }
 }
 
