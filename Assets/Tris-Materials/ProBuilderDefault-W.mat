@@ -54,16 +54,17 @@ Material:
   m_Parent: {fileID: 2100000, guid: 48f3a91d38846b846a692f68bae8b9f6, type: 2}
   m_ModifiedSerializedProperties: 26
   m_ValidKeywords:
+  - _ALPHATEST_ON
   - _EMISSION
   m_InvalidKeywords:
   - _DISABLE_SSR_TRANSPARENT
   m_LightmapFlags: 3
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 2000
+  m_CustomRenderQueue: 2450
   stringTagMap:
     MotionVector: User
-    RenderType: Opaque
+    RenderType: TransparentCutout
   disabledShaderPasses:
   - MOTIONVECTORS
   - TransparentDepthPrepass
@@ -84,7 +85,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _AlphaToMask: 0
+    - _AlphaToMask: 1
     - _Cull: 2
     - _Cutoff: 0.27
     - _DstBlend: 0
