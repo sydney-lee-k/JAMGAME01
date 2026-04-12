@@ -9,6 +9,7 @@ public class MoshManager : MonoBehaviour
     private int moshFadeTween = -1;
     public bool IsMoshing { get; private set; } = false;
     private const float moshStartEntropy = 0.45f;
+    private const float glitchEffectEntropy = 0.25f;
     private const float moshEndEntropy = 0.2f;
     public const float moshEntropyFadeTime = 0.2f;
 
@@ -35,24 +36,39 @@ public class MoshManager : MonoBehaviour
 
     public void StartMosh()
     {
-        datamosh.entropy = moshStartEntropy;
         if (IsMoshing)
         {
-            StartCoroutine(RestartMosh());
+            StartCoroutine(RestartMosh(moshStartEntropy));
         }
         else
         {
             datamosh.entropy = moshStartEntropy;
             datamosh.Glitch();
+            IsMoshing = true;
         }
     }
 
-    private IEnumerator RestartMosh()
+    public void StartCalmGlitch()
+    {
+        if (IsMoshing)
+        {
+            StartCoroutine(RestartMosh(glitchEffectEntropy));
+        }
+        else
+        {
+            datamosh.entropy = glitchEffectEntropy;
+            datamosh.Glitch();
+            IsMoshing = true;
+        }
+    }
+
+    private IEnumerator RestartMosh(float usedEntropy)
     {
         datamosh.Reset();
         yield return null;
-        datamosh.entropy = moshStartEntropy;
+        datamosh.entropy = usedEntropy;
         datamosh.Glitch();
+        IsMoshing = true;
     }
 
     public void FadeOutMosh()
@@ -62,6 +78,7 @@ public class MoshManager : MonoBehaviour
             .setOnComplete(() =>
             {
                 datamosh.Reset();
+                IsMoshing = false;
                 moshFadeTween = -1;
             }).id;
     }
