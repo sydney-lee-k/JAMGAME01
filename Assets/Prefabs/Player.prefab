@@ -162,17 +162,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MovementController
   moveLocked: 0
   lookLocked: 0
-  hitbox: {fileID: 6609658489013720042}
+  hitbox: {fileID: 0}
   cameraOffset: {x: 0, y: 1, z: 0}
   mouseSensitivity: 0.25
   clampAngle: 80
-  aerialGravity: 20
-  walkSpeed: 15
-  airSpeed: 10
-  acceleration: 60
-  jumpHeight: 15
-  stoppingDrag: 5
-  airDrag: 2
+  aerialGravity: 18.7
+  walkSpeed: 13.5
+  airSpeed: 8.6
+  acceleration: 22
+  jumpHeight: 12
+  stoppingDrag: 6
+  airDrag: 1.5
   maxSlopeGroundAngle: 50
   wallrunUpSpeed: 9.81
   wallrunDownSpeed: -9.81
