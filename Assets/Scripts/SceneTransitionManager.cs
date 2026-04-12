@@ -98,10 +98,7 @@ public class SceneTransitionManager : MonoBehaviour
                 if (timeTaken < minimumMoshTransitionTime)
                     yield return new WaitForSecondsRealtime(minimumMoshTransitionTime - timeTaken);
                 MoshManager.Instance.FadeOutMosh();
-                movementController.ResetVelocity();
-                player.transform.position = playerSpawn.position;
-                player.transform.eulerAngles = playerSpawn.eulerAngles;
-                movementController.KinematicOff();
+                movementController.SetTransform(playerSpawn);
                 break;
         }
         OnSceneTransitionOver?.Invoke();

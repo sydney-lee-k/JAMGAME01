@@ -58,10 +58,7 @@ public class ResetManager : MonoBehaviour
         OnPlayerResetStart?.Invoke();
 
         yield return new WaitForSecondsRealtime(resetMoshTime);
-        movementController.ResetVelocity();
-        player.transform.position = playerRespawn.position;
-        player.transform.eulerAngles = playerRespawn.eulerAngles;
-        movementController.KinematicOff();
+        movementController.SetTransform(playerRespawn);
         MoshManager.Instance.FadeOutMosh();
         yield return new WaitForSecondsRealtime(MoshManager.moshEntropyFadeTime);
         OnPlayerResetFinish?.Invoke();

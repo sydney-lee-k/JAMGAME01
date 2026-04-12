@@ -244,16 +244,12 @@ public class MovementController : MonoBehaviour
         }
     }
 
-    public void ResetVelocity()
+    public void SetTransform(Transform newTransform)
     {
         rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
-        rb.isKinematic = true;
-    }
-
-    public void KinematicOff()
-    {
-        rb.isKinematic = false;
+        rb.position = newTransform.position;
+        rb.rotation = newTransform.rotation;
     }
 
     void FixedUpdate()
