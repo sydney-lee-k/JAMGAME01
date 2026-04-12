@@ -533,37 +533,6 @@ public class MovementController : MonoBehaviour
     {
         input.Disable();
     }
-
-    // Magic colors and fancy things to make me see the invisible things from my nightmares.
-    private void OnDrawGizmosSelected()
-    {
-        //Wallrun Check
-        #if UNITY_EDITOR
-        Color wallColor = wallrunning ? Color.red : Color.green;
-        Handles.color = wallColor;
-        Vector3 center = transform.position;
-
-        Vector3 point1 = transform.position + transform.up * wallrunCheckHeight/2;
-        Vector3 point2 = transform.position - transform.up * wallrunCheckHeight/2;
-        DrawCapsule(point1, point2, wallrunCheckThickness);
-        #endif
-        
-        //Min Slam
-        Gizmos.color = Physics.Raycast(transform.position, -transform.up, minFloorDistance, groundLayer) ? Color.red : Color.green;
-        Gizmos.DrawLine(transform.position, transform.position + -transform.up * minFloorDistance);
-        
-        // Ground Check
-        Gizmos.color = grounded ? Color.red : Color.green;
-
-        center = transform.position + groundCheckOffset;
-        
-        Gizmos.matrix = Matrix4x4.identity;
-        Gizmos.DrawWireCube(center, groundCheckSize);
-        Quaternion rotation = Quaternion.Euler(0f, 45f, 0f);
-        Gizmos.matrix = Matrix4x4.TRS(center, rotation, Vector3.one);
-        Gizmos.DrawWireCube(Vector3.zero, groundCheckSize);
-        Gizmos.matrix = Matrix4x4.identity;
-    }
     
     #if UNITY_EDITOR
         private void DrawCapsule(Vector3 point1, Vector3 point2, float radius)
