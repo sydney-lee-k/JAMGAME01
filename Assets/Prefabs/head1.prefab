@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4423394874482915636}
   - component: {fileID: 8297562391262008937}
   - component: {fileID: 8459898472144388247}
+  - component: {fileID: 2632328489145095251}
   m_Layer: 0
   m_Name: head1
   m_TagString: Untagged
@@ -102,7 +103,7 @@ Animator:
   m_GameObject: {fileID: 9000906866432256133}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: b60d81e770cdf854f93b9a282482024a, type: 2}
+  m_Controller: {fileID: 9100000, guid: 067a7130ed2d9f643a58809542cf69a5, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -114,3 +115,15 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &2632328489145095251
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9000906866432256133}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6de56683c3c674e439dbb8a29d30b065, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Billboarding
