@@ -6,10 +6,15 @@ public class DistanceDestructable : MonoBehaviour
     [Header("Settings")] [SerializeField]
     private ConstitutingDestructible target;
     [SerializeField] private float distance;
+    [SerializeField] private float activationDelay;
+    private float remainingDelay;
 
     //Kept public because it's something another script MIGHT want to check
     [NonSerialized] public bool alive;
     private Transform player;
+    
+   
+    
     
     private void Start()
     {
@@ -20,8 +25,14 @@ public class DistanceDestructable : MonoBehaviour
     private void Update()
     {
         bool playerInArea = Vector3.Distance(transform.position, player.position) <= distance;
-
         bool shouldBeAlive = playerInArea ? !target.startConstructed : target.startConstructed;
+
+        if (playerInArea && remainingDelay > 0)
+        {
+            remainingDelay -= Time.deltaTime;
+            return;
+        }
+        remainingDelay = activationDelay;
 
         if (alive != shouldBeAlive && !target.reconstituting)
         {

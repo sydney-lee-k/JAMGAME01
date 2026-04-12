@@ -12,17 +12,21 @@ public class Spin : MonoBehaviour
     {
         if (!active)
         {
-            remainingLerpTime = 0;
+            remainingLerpTime = 0f;
+            return;
         }
-
-        if (remainingLerpTime <= lerpTime)
+        
+        float speedMultiplier;
+        if (lerpTime <= 0f)
         {
-            remainingLerpTime += Time.deltaTime;
-            transform.localEulerAngles += spinDirections * (remainingLerpTime/lerpTime) * Time.deltaTime;
+            speedMultiplier = 1f;
         }
         else
         {
-            transform.localEulerAngles += spinDirections * Time.deltaTime;
+            remainingLerpTime += Time.deltaTime;
+            speedMultiplier = Mathf.Clamp01(remainingLerpTime / lerpTime);
         }
+        
+        transform.localRotation *= Quaternion.Euler(spinDirections * speedMultiplier * Time.deltaTime);
     }
 }
