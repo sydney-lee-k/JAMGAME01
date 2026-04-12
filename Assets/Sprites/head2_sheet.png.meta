@@ -112,8 +112,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2677401d1f9925c428a0cbcb51256c16
-      internalID: -122126660
+      spriteID: 08b090976ece68048aa1cb3e8cfafa7b
+      internalID: -1251525882
       vertices: []
       indices: 
       edges: []
@@ -134,14 +134,36 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 638d8ff6019e2a34bbbcb44a7a6dac3a
-      internalID: -1763896402
+      spriteID: 99dc25ee8a3492c48bf9c45270b5f445
+      internalID: -132512262
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
       name: head2_sheet_2
+      rect:
+        serializedVersion: 2
+        x: 800
+        y: 400
+        width: 400
+        height: 400
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9ea3d5110198cab40835db05440283d1
+      internalID: -2046003639
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: head2_sheet_3
       rect:
         serializedVersion: 2
         x: 0
@@ -156,14 +178,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 8dd1217e3f0ece04f96ae0a8190af8cf
-      internalID: -1554898495
+      spriteID: b3653f85157baee48a845452498e154f
+      internalID: -1620454798
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: head2_sheet_3
+      name: head2_sheet_4
       rect:
         serializedVersion: 2
         x: 400
@@ -178,8 +200,30 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c5d0d19f70c5d3548b8d971045e141b1
-      internalID: 291050623
+      spriteID: 2aec4b01f00c8964db24f62c26099ff0
+      internalID: -1449061762
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: head2_sheet_5
+      rect:
+        serializedVersion: 2
+        x: 800
+        y: 0
+        width: 400
+        height: 400
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fbcfee5215712d2469d840aef62c07cb
+      internalID: -869671917
       vertices: []
       indices: 
       edges: []
@@ -188,7 +232,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: aac9207c84887d24c865645e390edfab
+    spriteID: ebb6909508729d342b54c4a7536f08bc
     internalID: 0
     vertices: []
     indices: 
@@ -198,12 +242,14 @@ TextureImporter:
     spriteCustomMetadata:
       entries:
       - key: SpriteEditor.SliceSettings
-        value: '{"sliceOnImport":false,"gridCellCount":{"x":2.0,"y":2.0},"gridSpriteSize":{"x":400.0,"y":400.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":3.0,"y":2.0},"gridSpriteSize":{"x":400.0,"y":400.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      head2_sheet_0: -122126660
-      head2_sheet_1: -1763896402
-      head2_sheet_2: -1554898495
-      head2_sheet_3: 291050623
+      head2_sheet_0: -1251525882
+      head2_sheet_1: -132512262
+      head2_sheet_2: -2046003639
+      head2_sheet_3: -1620454798
+      head2_sheet_4: -1449061762
+      head2_sheet_5: -869671917
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
