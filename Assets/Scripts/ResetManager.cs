@@ -7,6 +7,7 @@ public class ResetManager : MonoBehaviour
     public static ResetManager instance;
     
     [SerializeField] private Transform playerStart;
+    [SerializeField] private Transform playerRespawn;
 
     private GameObject player;
     private MovementController movementController;
@@ -32,6 +33,7 @@ public class ResetManager : MonoBehaviour
         instance = this;
         playerStart = GameObject.FindWithTag("PlayerSpawn").transform;
         SceneTransitionManager.OnSceneLoaded += () => playerStart = GameObject.FindWithTag("PlayerSpawn").transform;
+        if (!playerRespawn) playerRespawn = playerStart;
     }
 
     public void Reset()
@@ -48,15 +50,15 @@ public class ResetManager : MonoBehaviour
         StartCoroutine(ResetTransition());
     }
     
-    private IEnumerator ResetTransition()
+    public IEnumerator ResetTransition()
     {
         movementController.lookLocked = true;
         movementController.moveLocked = true;
         MoshManager.Instance.StartMosh();
         yield return null;
         yield return null;
-        player.transform.position = playerStart.position;
-        player.transform.eulerAngles = playerStart.eulerAngles;
+        player.transform.position = playerRespawn.position;
+        player.transform.eulerAngles = playerRespawn.eulerAngles;
         OnPlayerResetStart?.Invoke();
 
         yield return new WaitForSecondsRealtime(resetMoshTime);

@@ -5,6 +5,8 @@ public class FollowPath : MonoBehaviour
 {
     [Header("Standard Settings")]
     [SerializeField] private BezierPath path;
+    public bool active = true;
+    private bool startActive;
     [SerializeField] private float speed = 5f;
     [SerializeField] private float rotationSpeed = 10f;
     [SerializeField] private Vector3 rotationMask = new Vector3(1, 1, 1);
@@ -22,6 +24,7 @@ public class FollowPath : MonoBehaviour
 
     private void Start()
     {
+        startActive = active;
         currentPos = path.GetPoint(progress);
         transform.position = currentPos;
         startProgress = progress;
@@ -31,6 +34,7 @@ public class FollowPath : MonoBehaviour
 
     public void ResetPath(float additionalDelay = 0f)
     {
+        active = startActive;
         progress = startProgress;
         currentPos = path.GetPoint(progress);
         transform.position = currentPos;
@@ -40,6 +44,8 @@ public class FollowPath : MonoBehaviour
 
     private void Update()
     {
+        if (!active) return;
+        
         //Start Delay
         if (remainingStartDelay > 0)
         {

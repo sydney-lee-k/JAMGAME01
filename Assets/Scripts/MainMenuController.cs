@@ -16,7 +16,7 @@ public class MainMenuController : MonoBehaviour
     private void Start()
     {
         startGameButton.onClick.AddListener(() =>
-            SceneTransitionManager.Instance.StartSceneTransition(SceneTransitionManager.SceneName.LevelBlockouts, SceneTransitionManager.TransitionStyle.FadeIn));
+            SceneTransitionManager.Instance.StartSceneTransition(SceneTransitionManager.SceneName.FifthStage, SceneTransitionManager.TransitionStyle.FadeIn));
 
         optionsButton.onClick.AddListener(() =>
         {
