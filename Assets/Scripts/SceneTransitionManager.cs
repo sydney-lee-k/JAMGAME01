@@ -14,14 +14,10 @@ public class SceneTransitionManager : MonoBehaviour
     [SerializeField] private EventSystem eventSystem;
     private bool isTransitionActive = false;
     private bool persistentsLoaded = false;
-    private Datamosh datamosh;
     private SceneName activeScene;
-    private const float moshStartEntropy = 0.45f;
-    private const float moshEndEntropy = 0.2f;
-    private const float moshEntropyFadeTime = 0.2f;
-    private const float minimumMoshTime = 1.6f;
     private const float sceneFadeOutTime = 0.32f;
     private const float sceneFadeInTime = 0.32f;
+    private const float minimumMoshTransitionTime = 1.6f;
 
     public static event Action OnSceneLoaded;
     public static event Action OnSceneTransitionOver;
@@ -39,8 +35,6 @@ public class SceneTransitionManager : MonoBehaviour
 
     private void Start()
     {
-        datamosh = Camera.main.GetComponent<Datamosh>();
-        DontDestroyOnLoad(datamosh.gameObject);
         DontDestroyOnLoad(renderCamera.gameObject);
         DontDestroyOnLoad(renderCanvas.gameObject);
         DontDestroyOnLoad(eventSystem.gameObject);
@@ -49,7 +43,6 @@ public class SceneTransitionManager : MonoBehaviour
 
     private void OnDestroy()
     {
-        if (datamosh != null) Destroy(datamosh.gameObject);
         if (renderCamera != null) Destroy(renderCamera.gameObject);
         if (renderCanvas != null) Destroy(renderCanvas.gameObject);
         if (eventSystem != null) Destroy(eventSystem.gameObject);
@@ -73,8 +66,7 @@ public class SceneTransitionManager : MonoBehaviour
                 yield return new WaitForSecondsRealtime(sceneFadeOutTime);
                 break;
             case TransitionStyle.Datamosh:
-                datamosh.entropy = moshStartEntropy;
-                datamosh.Glitch();
+                MoshManager.Instance.StartMosh();
                 break;
         }
 
@@ -95,23 +87,14 @@ public class SceneTransitionManager : MonoBehaviour
             case TransitionStyle.FadeIn:
                 LeanTween.alpha(fadeImageRect, 0f, sceneFadeInTime).setEaseOutCubic();
                 yield return new WaitForSecondsRealtime(sceneFadeOutTime);
-                OnSceneTransitionOver?.Invoke();
                 break;
             case TransitionStyle.Datamosh:
-                if (timeTaken < minimumMoshTime)
-                    yield return new WaitForSecondsRealtime(minimumMoshTime - timeTaken);
-                LeanTween.value(gameObject, value => datamosh.entropy = value, moshStartEntropy, moshEndEntropy, moshEntropyFadeTime)
-                    .setOnComplete(() =>
-                    {
-                        datamosh.Reset();
-                        OnSceneTransitionOver?.Invoke();
-                    });
+                if (timeTaken < minimumMoshTransitionTime)
+                    yield return new WaitForSecondsRealtime(minimumMoshTransitionTime - timeTaken);
+                MoshManager.Instance.FadeOutMosh();
                 break;
         }
-
-        
-        
-        
+        OnSceneTransitionOver?.Invoke();
         isTransitionActive = false;
     }
 

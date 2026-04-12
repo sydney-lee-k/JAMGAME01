@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class ResetManager : MonoBehaviour
@@ -6,9 +7,14 @@ public class ResetManager : MonoBehaviour
     public static ResetManager instance;
     
     [SerializeField] private Transform playerStart;
-    
+
     private GameObject player;
+    private MovementController movementController;
     private FollowPath[] pathFollowers;
+    private const float resetMoshTime = 1.6f;
+
+    public static event Action OnPlayerResetStart;
+    public static event Action OnPlayerResetFinish;
 
     private void Start()
     {
@@ -16,9 +22,10 @@ public class ResetManager : MonoBehaviour
         GameObject[] playerParts = GameObject.FindGameObjectsWithTag("Player");
         foreach (GameObject playerPart in playerParts)
         {
-            if (playerPart.GetComponent<MovementController>())
+            if (playerPart.TryGetComponent(out MovementController mc))
             {
                 player = playerPart;
+                movementController = mc;
                 break;
             }
         }
@@ -32,11 +39,30 @@ public class ResetManager : MonoBehaviour
             //Null check in case asynchronous loading causes issues.
             if (pathFollower != null)
             {
-                pathFollower.Reset();
+                pathFollower.ResetPath(resetMoshTime + MoshManager.moshEntropyFadeTime);
             }
         }
+
+        StartCoroutine(ResetTransition());
+    }
+    
+    private IEnumerator ResetTransition()
+    {
+        movementController.lookLocked = true;
+        movementController.moveLocked = true;
+        MoshManager.Instance.StartMosh();
+        yield return null;
+        yield return null;
         player.transform.position = playerStart.position;
         player.transform.eulerAngles = playerStart.eulerAngles;
-        
+        OnPlayerResetStart?.Invoke();
+
+        yield return new WaitForSecondsRealtime(resetMoshTime);
+        MoshManager.Instance.FadeOutMosh();
+        yield return new WaitForSecondsRealtime(MoshManager.moshEntropyFadeTime);
+        OnPlayerResetFinish?.Invoke();
+
+        movementController.lookLocked = false;
+        movementController.moveLocked = false;
     }
 }
