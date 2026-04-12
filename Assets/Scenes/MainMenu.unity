@@ -726,7 +726,8 @@ MonoBehaviour:
   mouseSensitivitySlider: {fileID: 1244733285}
   masterVolumeSlider: {fileID: 1906800172}
   musicVolumeSlider: {fileID: 1340446991}
-  effectVolumeSlider: {fileID: 1340446991}
+  soundVolumeSlider: {fileID: 1340446991}
+  audioMixer: {fileID: 24100000, guid: ee7c65b71c0c1204d97ad27a36d21689, type: 2}
   resetButton: {fileID: 430904867}
 --- !u!1 &170911406
 GameObject:

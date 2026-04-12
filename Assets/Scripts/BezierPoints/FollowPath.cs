@@ -29,13 +29,13 @@ public class FollowPath : MonoBehaviour
         remainingStartDelay = delayBeforeStart;
     }
 
-    public void Reset()
+    public void ResetPath(float additionalDelay = 0f)
     {
         progress = startProgress;
         currentPos = path.GetPoint(progress);
         transform.position = currentPos;
         transform.eulerAngles = startAngle;
-        remainingStartDelay = delayBeforeStart;
+        remainingStartDelay = delayBeforeStart + additionalDelay;
     }
 
     private void Update()
