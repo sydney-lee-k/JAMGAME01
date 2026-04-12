@@ -30,6 +30,8 @@ public class ResetManager : MonoBehaviour
             }
         }
         instance = this;
+        playerStart = GameObject.FindWithTag("PlayerSpawn").transform;
+        SceneTransitionManager.OnSceneLoaded += () => playerStart = GameObject.FindWithTag("PlayerSpawn").transform;
     }
 
     public void Reset()
