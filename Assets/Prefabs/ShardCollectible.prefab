@@ -102,6 +102,7 @@ GameObject:
   - component: {fileID: 6834225476698750732}
   - component: {fileID: 8456443490816345431}
   - component: {fileID: 7196109849553797472}
+  - component: {fileID: 4712237018486737803}
   m_Layer: 0
   m_Name: ShardCollectible
   m_TagString: Untagged
@@ -217,3 +218,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 582fe415f29a89f4b8886051e48068ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::KeyPickup
+--- !u!114 &4712237018486737803
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5443264643837143474}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6de56683c3c674e439dbb8a29d30b065, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Billboarding
