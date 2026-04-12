@@ -19,11 +19,18 @@ public class LevelGoal : MonoBehaviour
         sphereCollider.enabled = false;
         spriteRenderer.enabled = false;
         levelKeysCount = FindObjectsByType<KeyPickup>(FindObjectsSortMode.None).Length;
-        KeyPickup.OnLastKeyGather += () =>
-        {
-            sphereCollider.enabled = true;
-            spriteRenderer.enabled = true;
-        };
+        KeyPickup.OnLastKeyGather += EnableComponents;
+    }
+
+    private void EnableComponents()
+    {
+        sphereCollider.enabled = true;
+        spriteRenderer.enabled = true;
+    }
+
+    private void OnDestroy()
+    {
+        KeyPickup.OnLastKeyGather -= EnableComponents;
     }
 
     private void OnTriggerEnter(Collider other)
