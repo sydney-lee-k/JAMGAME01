@@ -45633,6 +45633,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   bgColor: {r: 1, g: 1, b: 1, a: 1}
   useSkybox: 1
+  skybox: {fileID: 2100000, guid: 46a2cf3793d7db54caeabfb3e18141d8, type: 2}
 --- !u!4 &1008095158
 Transform:
   m_ObjectHideFlags: 0
