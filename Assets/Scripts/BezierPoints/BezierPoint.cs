@@ -70,27 +70,4 @@ public class BezierPoint : MonoBehaviour
     {
         return Control2.transform.position;
     }
-
-    private void OnDrawGizmos()
-    {
-        
-        if (DrawLines)
-        {
-            Handles.color = Color.white;
-            Handles.DrawLine(transform.position, Control1.transform.position, 1f);
-            Handles.DrawLine(transform.position, Control2.transform.position, 1f);
-        }
-
-        if (DrawPoints)
-        {
-            Gizmos.color = Color.darkRed;
-            Gizmos.DrawSphere(Control1.transform.position, 0.15f);
-            Gizmos.DrawSphere(Control2.transform.position, 0.15f);
-            Gizmos.color = Color.red;
-            Gizmos.DrawSphere(transform.position, 0.2f);
-
-        }
-
-    }
-
 }
